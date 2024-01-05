@@ -2,12 +2,14 @@ package middleware
 
 import (
 	"context"
-	"net/http"
+	"errors"
 	"strings"
 
 	"firebase.google.com/go/auth"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+
+	vnderror "github.com/thienhaole92/vnd/error"
 )
 
 type AuthProvider interface {
@@ -25,17 +27,17 @@ func FirebaseAuth(skipper middleware.Skipper, auth AuthProvider) echo.Middleware
 			authHeader := strings.TrimSpace(req.Header.Get(echo.HeaderAuthorization))
 
 			if len(authHeader) == 0 {
-				return echo.NewHTTPError(http.StatusUnauthorized, "An authorization header is required")
+				return vnderror.Unauthorized(errors.New("an authorization header is required"))
 			}
 
 			bearerToken := strings.Split(authHeader, " ")
 			if len(bearerToken) != 2 {
-				return echo.NewHTTPError(http.StatusUnauthorized, "Invalid authorization token")
+				return vnderror.Unauthorized(errors.New("invalid authorization token"))
 			}
 
 			token, err := auth.VerifyIDTokenAndCheckRevoked(req.Context(), bearerToken[1])
 			if err != nil {
-				return echo.ErrUnauthorized
+				return vnderror.Unauthorized(err)
 			}
 
 			c.Set(UserIDContextKey, token.UID)

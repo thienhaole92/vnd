@@ -38,3 +38,14 @@ func BadRequest(err error) error {
 		},
 	}
 }
+
+func Unauthorized(err error) error {
+	return &Error{
+		CustomCode: -40111,
+		HTTPError: &echo.HTTPError{
+			Code:     http.StatusUnauthorized,
+			Message:  err.Error(),
+			Internal: err,
+		},
+	}
+}

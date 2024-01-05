@@ -25,7 +25,7 @@ func (s *MultiSubscriber) Subscribe(topic string, consumeFunc subscriber.Consume
 	log := logger.GetLogger("Subscribe")
 	defer log.Sync()
 
-	newSubscriber, err := NewWatermillSubscriber(s.config, topic, consumeFunc)
+	newSubscriber, err := NewSubscriber(s.config, topic, consumeFunc)
 	if err != nil {
 		return err
 	}

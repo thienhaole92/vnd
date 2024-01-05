@@ -9,7 +9,7 @@ import (
 	"github.com/thienhaole92/vnd/redis"
 )
 
-type WatermillPublisher struct {
+type wpub struct {
 	*redisstream.Publisher
 	topic string
 }
@@ -43,13 +43,13 @@ func NewPublisher(config *Config, topic string) (publisher.Publisher, error) {
 		return nil, err
 	}
 
-	return &WatermillPublisher{
+	return &wpub{
 		Publisher: publisher,
 		topic:     topic,
 	}, nil
 }
 
-func (w *WatermillPublisher) PublishMessage(messages ...string) error {
+func (w *wpub) PublishMessage(messages ...string) error {
 	msgs := make([]*message.Message, 0)
 
 	for _, v := range messages {
@@ -62,6 +62,6 @@ func (w *WatermillPublisher) PublishMessage(messages ...string) error {
 	)
 }
 
-func (w *WatermillPublisher) Topic() string {
+func (w *wpub) Topic() string {
 	return w.topic
 }

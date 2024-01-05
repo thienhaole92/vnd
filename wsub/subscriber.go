@@ -13,7 +13,7 @@ import (
 	"github.com/thienhaole92/vnd/subscriber"
 )
 
-type WatermillSubscriber struct {
+type wsub struct {
 	*redisstream.Subscriber
 	topic       string
 	groupID     string
@@ -21,7 +21,7 @@ type WatermillSubscriber struct {
 	consumeFunc subscriber.ConsumeFunc
 }
 
-func NewWatermillSubscriber(config *Config, topic string, consumeFunc subscriber.ConsumeFunc) (subscriber.Subscriber, error) {
+func NewSubscriber(config *Config, topic string, consumeFunc subscriber.ConsumeFunc) (subscriber.Subscriber, error) {
 	log := logger.GetLogger("NewWatermillSubscriber")
 	defer log.Sync()
 
@@ -50,7 +50,7 @@ func NewWatermillSubscriber(config *Config, topic string, consumeFunc subscriber
 		return nil, err
 	}
 
-	return &WatermillSubscriber{
+	return &wsub{
 		Subscriber:  s,
 		consumeFunc: consumeFunc,
 		done:        make(chan bool, 1),
@@ -59,18 +59,18 @@ func NewWatermillSubscriber(config *Config, topic string, consumeFunc subscriber
 	}, nil
 }
 
-func (r *WatermillSubscriber) Close() error {
+func (r *wsub) Close() error {
 	r.done <- true
 	defer close(r.done)
 
 	return r.Subscriber.Close()
 }
 
-func (r *WatermillSubscriber) GroupID() string {
+func (r *wsub) GroupID() string {
 	return r.groupID
 }
 
-func (r *WatermillSubscriber) Start() {
+func (r *wsub) Start() {
 	log := logger.GetLogger("Redis Subcriber")
 	defer log.Sync()
 
@@ -106,11 +106,11 @@ func (r *WatermillSubscriber) Start() {
 	}
 }
 
-func (r *WatermillSubscriber) Topic() string {
+func (r *wsub) Topic() string {
 	return r.topic
 }
 
-func (r *WatermillSubscriber) consumeMessage(ctx context.Context, msg *message.Message) error {
+func (r *wsub) consumeMessage(ctx context.Context, msg *message.Message) error {
 	log := logger.GetLogger("")
 	defer log.Sync()
 
