@@ -1,6 +1,6 @@
 # vnd
 
-Template for REST API server made with Golang.
+Template for REST API server made with Golang. This template is built on top of [`echo`](https://echo.labstack.com/).
 
 Features:
 - Graceful stop
