@@ -1,6 +1,8 @@
 module example
 
-go 1.20
+go 1.21
+
+toolchain go1.21.5
 
 require (
 	github.com/labstack/echo/v4 v4.11.4
