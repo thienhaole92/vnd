@@ -29,13 +29,7 @@ func NewGetSuccess(log *logger.Logger) *getSuccess {
 }
 
 func (s *getSuccess) Execute(ctx vndcontext.Context, req *GetSuccessReq) (*rest.Result, error) {
-	uid, err := ctx.UserId()
-	if err != nil {
-		s.log.Errorw("failed to get user id", "error", err)
-		return nil, err
-	}
-
 	return &rest.Result{
-		Data: uid,
+		Data: nil,
 	}, nil
 }

@@ -18,7 +18,9 @@ func (v1 *V1) Configure(rn *runner.Runner) error {
 }
 
 func (v1 *V1) registerRoutes(s *service.Service) error {
-	v1.GET("/", rest.Wrapper(s.GetSuccess))
+	v1.POST("/validate-fail", rest.Wrapper(s.ValidateFail))
+	v1.GET("/success", rest.Wrapper(s.GetSuccess))
+	v1.GET("/fail", rest.Wrapper(s.GetFail))
 
 	return nil
 }
