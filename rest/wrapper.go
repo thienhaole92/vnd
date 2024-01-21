@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"fmt"
 	"net/http"
 	"reflect"
 	"runtime"
@@ -37,7 +38,7 @@ func Wrapper[TREQ any](wrapped func(context.Context, *TREQ) (*Result, error)) ec
 				CustomCode: -40001,
 				HTTPError: &echo.HTTPError{
 					Code:    http.StatusBadRequest,
-					Message: "invalid request",
+					Message: fmt.Sprintf("failed to bind request %s", err.Error()),
 				},
 			}
 		}
@@ -48,7 +49,7 @@ func Wrapper[TREQ any](wrapped func(context.Context, *TREQ) (*Result, error)) ec
 				CustomCode: -40002,
 				HTTPError: &echo.HTTPError{
 					Code:    http.StatusBadRequest,
-					Message: "invalid request",
+					Message: fmt.Sprintf("failed to validate request %s", err.Error()),
 				},
 			}
 		}
