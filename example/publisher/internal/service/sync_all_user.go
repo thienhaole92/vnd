@@ -5,9 +5,8 @@ import (
 
 	"github.com/google/uuid"
 	vndcontext "github.com/thienhaole92/vnd/context"
-	"github.com/thienhaole92/vnd/rest"
-
 	"github.com/thienhaole92/vnd/logger"
+	"github.com/thienhaole92/vnd/rest"
 )
 
 type SyncAllUserReq struct {
@@ -17,7 +16,7 @@ func (s *Service) SyncAllUser(e vndcontext.Context, req *SyncAllUserReq) (*rest.
 	delegate := func(log *logger.Logger, ctx vndcontext.Context, req *SyncAllUserReq) (*rest.Result, error) {
 		exec := NewSyncAllUsers(
 			log,
-			NewPublishUserInfo(s.publisher),
+			NewPublishUserInfo(s.publisher.UserInfo),
 		)
 		return exec.Execute(ctx, req)
 	}

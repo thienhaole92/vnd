@@ -1,12 +1,16 @@
 package wpub
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/ThreeDotsLabs/watermill"
 	"github.com/ThreeDotsLabs/watermill-redisstream/pkg/redisstream"
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/thienhaole92/vnd/logger"
 	"github.com/thienhaole92/vnd/publisher"
 	"github.com/thienhaole92/vnd/redis"
+	"github.com/thienhaole92/vnd/runner"
 )
 
 type wpub struct {
@@ -64,4 +68,26 @@ func (w *wpub) PublishMessage(messages ...string) error {
 
 func (w *wpub) Topic() string {
 	return w.topic
+}
+
+func RegisterPublisher(rn *runner.Runner, topic string) (publisher.Publisher, error) {
+	c, err := NewConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	pub, err := NewPublisher(c, topic)
+	if err != nil {
+		return nil, err
+	}
+
+	hn := fmt.Sprintf("close_%s_publisher", topic)
+	hn = strings.ReplaceAll(hn, " ", "_")
+	hn = strings.ReplaceAll(hn, ".", "_")
+
+	rn.AddShutdownHook(hn, func(*runner.Runner) error {
+		return pub.Close()
+	})
+
+	return pub, nil
 }

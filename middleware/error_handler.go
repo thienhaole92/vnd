@@ -7,7 +7,6 @@ import (
 
 func ErrorHandler(next echo.HTTPErrorHandler) echo.HTTPErrorHandler {
 	return func(err error, c echo.Context) {
-		// same check as default handler
 		if c.Response().Committed {
 			return
 		}

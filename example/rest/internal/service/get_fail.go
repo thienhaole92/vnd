@@ -30,10 +30,20 @@ func NewGetFail(log *logger.Logger) *getFail {
 	}
 }
 
-func (s *getFail) Execute(ctx vndcontext.Context, req *GetFailReq) (*rest.Result, error) {
+func (s *getFail) Execute(ctx vndcontext.Context, req *GetFailReq) (res *rest.Result, err error) {
+	defer func() {
+		if err != nil {
+			s.log.With("err", err)
+		}
+
+		s.log.Infow("completed")
+		s.log.Sync()
+	}()
+
+	s.log.With("func1", "ok")
+
 	uid, err := ctx.UserId()
 	if err != nil {
-		s.log.Errorw("failed to get user id", "error", err)
 		return nil, echo.NewHTTPError(http.StatusUnauthorized, err)
 	}
 
