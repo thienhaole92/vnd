@@ -1,6 +1,9 @@
-.PHONY: pre-commit
+.PHONY: pre-commit,test-go
 
 pre-commit:
 	go mod tidy
 	go vet ./...
 	go fmt ./...
+
+test-go:
+	go test -v -cover ./...

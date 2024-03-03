@@ -9,15 +9,20 @@ func Page(val int) int {
 	return val
 }
 
-func Limit(val int) int {
-	if val <= 0 {
+func Limit(val, def int) int {
+	if val <= 0 && def <= 0 {
 		return DefaultPageItems
 	}
+
+	if val <= 0 && def > 0 {
+		return def
+	}
+
 	return val
 }
 
-func Offset(page int, pageSize int) int {
+func Offset(page, pageSize, defPageSize int) int {
 	p := Page(page)
-	ps := Limit(pageSize)
+	ps := Limit(pageSize, defPageSize)
 	return (p - 1) * ps
 }

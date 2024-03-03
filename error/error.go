@@ -14,7 +14,7 @@ type Error struct {
 }
 
 func (e *Error) Error() string {
-	return fmt.Sprintf("CustomCode=%d, %s", e.CustomCode, e.HTTPError.Error())
+	return fmt.Sprintf("custom_code=%d, %s", e.CustomCode, e.HTTPError.Error())
 }
 
 func InternalServerError(err error) error {
