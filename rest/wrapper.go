@@ -1,20 +1,20 @@
 package rest
 
 import (
-	"fmt"
 	"net/http"
 	"reflect"
 	"runtime"
 	"time"
 
+	vnderror "github.com/thienhaole92/vnd/error"
+
 	"github.com/labstack/echo/v4"
 	"github.com/thienhaole92/vnd/context"
-	vnderror "github.com/thienhaole92/vnd/error"
 	"github.com/thienhaole92/vnd/internal"
 	"github.com/thienhaole92/vnd/logger"
 )
 
-const RequestObjectContextKey = "service_requestObject"
+const RequestObjectContextKey = "service_request_object"
 
 func Wrapper[TREQ any](wrapped func(context.Context, *TREQ) (*Result, error)) echo.HandlerFunc {
 	return func(c echo.Context) error {
@@ -37,8 +37,9 @@ func Wrapper[TREQ any](wrapped func(context.Context, *TREQ) (*Result, error)) ec
 			return &vnderror.Error{
 				CustomCode: -40001,
 				HTTPError: &echo.HTTPError{
-					Code:    http.StatusBadRequest,
-					Message: fmt.Sprintf("failed to bind request %s", err.Error()),
+					Code:     http.StatusBadRequest,
+					Message:  err.Error(),
+					Internal: err,
 				},
 			}
 		}
@@ -48,8 +49,9 @@ func Wrapper[TREQ any](wrapped func(context.Context, *TREQ) (*Result, error)) ec
 			return &vnderror.Error{
 				CustomCode: -40002,
 				HTTPError: &echo.HTTPError{
-					Code:    http.StatusBadRequest,
-					Message: fmt.Sprintf("failed to validate request %s", err.Error()),
+					Code:     http.StatusBadRequest,
+					Message:  err.Error(),
+					Internal: err,
 				},
 			}
 		}
@@ -64,12 +66,10 @@ func Wrapper[TREQ any](wrapped func(context.Context, *TREQ) (*Result, error)) ec
 		status := c.Response().Status
 		if status != 0 {
 			log.Infow("request end", "request_id", requestId, "at", time.Now().Format(time.RFC3339), "status", status)
-
 			return c.JSON(status, res)
 		}
 
 		log.Infow("request end", "request_id", requestId, "at", time.Now().Format(time.RFC3339), "status", http.StatusOK)
-
 		return c.JSON(http.StatusOK, res)
 	}
 }

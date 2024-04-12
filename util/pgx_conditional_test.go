@@ -120,7 +120,7 @@ func TestBuildConitionalQuery(t *testing.T) {
 
 	for _, tt := range testcases {
 		t.Run(tt.name, func(t *testing.T) {
-			where, args := BuildConitionalQuery(tt.arg, tt.startFrom)
+			where, args := BuildAndConitionalQuery(tt.arg, tt.startFrom)
 			if where != tt.expect.Where {
 				t.Errorf("want %s, got %s", tt.expect.Where, where)
 			}

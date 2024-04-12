@@ -166,7 +166,7 @@ func BuildPostgresDatabaseMigrationHook(mh MigrationHook) RunnerOption {
 			driver,
 		)
 		if err != nil {
-			log.Errorw("failed to init migrate source", "error", err)
+			log.Errorw("fail to init migrate source", "error", err)
 			return err
 		}
 

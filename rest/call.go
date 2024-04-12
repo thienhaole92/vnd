@@ -8,7 +8,7 @@ import (
 func Call[REQ any](e context.Context, req *REQ, name string, delegate Delegate[REQ]) (*Result, error) {
 	log := logger.GetLogger(name)
 	defer func() {
-		log.Infow("completed")
+		log.Infow("call completed")
 		log.Sync()
 	}()
 
@@ -17,5 +17,10 @@ func Call[REQ any](e context.Context, req *REQ, name string, delegate Delegate[R
 		"request_id", requestId,
 	}...)
 
-	return delegate(log, e, req)
+	r, err := delegate(log, e, req)
+	if err != nil {
+		log.Errorw("delegator execution failed", "error", err)
+	}
+
+	return r, err
 }

@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-func BuildConitionalQuery(arg any, startFrom uint) (string, []any) {
+func BuildAndConitionalQuery(arg any, startFrom uint) (string, []any) {
 	where := ""
 	args := []any{}
 
