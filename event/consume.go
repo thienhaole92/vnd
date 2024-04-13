@@ -18,5 +18,10 @@ func Consume[D any](ctx context.Context, message EventString, name string, deleg
 		return err
 	}
 
-	return delegate(log, ctx, &schema)
+	err := delegate(log, ctx, &schema)
+	if err != nil {
+		log.Errorw("fail to consume message", "error", err)
+	}
+
+	return nil
 }
